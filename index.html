@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JM Supplement &amp; Peptide Wiki</title>
+<style>
+  :root{
+    --bg:#0d1117; --bg2:#161b22; --card:#1c2230; --card2:#222a3a;
+    --line:#2a3242; --txt:#e6edf3; --muted:#8b97a8; --accent:#5eead4;
+    --t1:#34d399; --t3:#fbbf24; --t4:#f472b6; --research:#a78bfa;
+    --g-strong:#34d399; --g-mod:#60a5fa; --g-prelim:#fbbf24; --g-weak:#fb923c; --g-low:#f87171;
+    --shadow:0 4px 18px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:radial-gradient(1200px 600px at 70% -10%,#13243a 0%,var(--bg) 55%);color:var(--txt);line-height:1.5}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  header{padding:34px 24px 14px;max-width:1200px;margin:0 auto}
+  h1{margin:0 0 4px;font-size:30px;letter-spacing:-.5px}
+  .sub{color:var(--muted);font-size:15px}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 24px 60px}
+
+  .stats{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0 4px}
+  .stat{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px 16px;min-width:104px}
+  .stat b{display:block;font-size:22px}
+  .stat span{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.6px}
+
+  .tabs{display:flex;gap:8px;margin:18px 0 0;flex-wrap:wrap}
+  .tab{cursor:pointer;padding:10px 18px;border-radius:10px 10px 0 0;border:1px solid var(--line);border-bottom:none;
+    background:var(--bg2);color:var(--muted);font-size:14px;font-weight:600}
+  .tab.active{background:var(--card);color:var(--txt)}
+
+  .controls{position:sticky;top:0;z-index:20;background:rgba(13,17,23,.9);backdrop-filter:blur(8px);
+    padding:14px 0;border-bottom:1px solid var(--line)}
+  .controls-inner{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  input[type=search]{flex:1;min-width:220px;background:var(--card);border:1px solid var(--line);color:var(--txt);
+    padding:11px 14px;border-radius:10px;font-size:15px;outline:none}
+  input[type=search]:focus{border-color:var(--accent)}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{cursor:pointer;user-select:none;border:1px solid var(--line);background:var(--card);color:var(--muted);
+    padding:7px 12px;border-radius:999px;font-size:13px;transition:.15s;white-space:nowrap}
+  .chip:hover{border-color:var(--accent);color:var(--txt)}
+  .chip.active{background:var(--accent);color:#05231d;border-color:var(--accent);font-weight:600}
+  select{background:var(--card);border:1px solid var(--line);color:var(--txt);padding:9px 12px;border-radius:10px;font-size:14px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:18px}
+  .card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);border-radius:14px;
+    padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent)}
+  .card.t1::before{background:var(--t1)} .card.t3::before{background:var(--t3)}
+  .card.t4::before{background:var(--t4)} .card.research::before{background:var(--research)}
+  .card.suggested::before{background:var(--accent);background-image:repeating-linear-gradient(45deg,transparent,transparent 5px,rgba(0,0,0,.25) 5px,rgba(0,0,0,.25) 10px)}
+  .card h3{margin:0 0 8px;font-size:16.5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;line-height:1.3}
+  .badge{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;letter-spacing:.3px;white-space:nowrap}
+  .b-t1{background:rgba(52,211,153,.16);color:var(--t1)} .b-t3{background:rgba(251,191,36,.16);color:var(--t3)}
+  .b-t4{background:rgba(244,114,182,.16);color:var(--t4)} .b-research{background:rgba(167,139,250,.16);color:var(--research)}
+  .b-sugg{background:rgba(94,234,212,.14);color:var(--accent)}
+  .grade{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:6px}
+  .gr-Strong{background:rgba(52,211,153,.16);color:var(--g-strong)}
+  .gr-Moderate{background:rgba(96,165,250,.16);color:var(--g-mod)}
+  .gr-Preliminary{background:rgba(251,191,36,.16);color:var(--g-prelim)}
+  .gr-Weak{background:rgba(251,146,60,.16);color:var(--g-weak)}
+  .gr-Minimal{background:rgba(248,113,113,.17);color:var(--g-low)}
+  .stack-tag{font-size:11px;color:var(--muted);border:1px solid var(--line);padding:2px 7px;border-radius:6px}
+  .specs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 9px}
+  .spec{font-size:12px;background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:4px 8px}
+  .spec i{color:var(--muted);font-style:normal}
+  .note{font-size:13.5px;color:#cdd6e3;margin:0 0 4px}
+  .src{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .src b{color:#b9c4d4;font-weight:600}
+  details.ev{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+  details.ev summary{cursor:pointer;font-size:12.5px;color:var(--accent);font-weight:600;list-style:none}
+  details.ev summary::-webkit-details-marker{display:none}
+  details.ev summary::before{content:"▸ ";color:var(--accent)}
+  details.ev[open] summary::before{content:"▾ "}
+  .ev-body{margin-top:8px;font-size:12.8px;color:#cdd6e3}
+  .ev-body p{margin:0 0 7px}
+  .ev-body .k{color:var(--muted);font-weight:600;text-transform:uppercase;font-size:10.5px;letter-spacing:.5px;display:block;margin-bottom:1px}
+  .flag{color:#fca5a5}
+  .card .link{display:inline-block;margin-top:8px;font-size:12.5px}
+  .empty{text-align:center;color:var(--muted);padding:50px 0;display:none}
+
+  .section-h{margin:40px 0 6px;font-size:21px;display:flex;align-items:center;gap:10px}
+  .section-h .dot{width:9px;height:9px;border-radius:50%;background:var(--accent)}
+  .ls-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-top:14px}
+  .ls{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .ls h4{margin:0 0 10px;font-size:16px;color:var(--accent)}
+  .ls p{margin:0 0 10px;font-size:14px;color:#cdd6e3}
+  .ls ul{margin:0;padding-left:18px;font-size:14px;color:#cdd6e3}
+  .ls li{margin-bottom:7px}
+  .vendors{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .vendor{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 11px;font-size:13px}
+
+  .callout{margin:16px 0 2px;background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.35);
+    border-radius:12px;padding:14px 18px;font-size:13.5px;color:#f4c7c7}
+  .callout b{color:#fca5a5}
+  .skip{margin-top:18px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .skip h4{margin:0 0 8px;color:#fca5a5;font-size:15px}
+  .skip li{font-size:13.5px;color:#cdd6e3;margin-bottom:6px}
+
+  /* peptide-specific badges */
+  .pbadges{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 8px}
+  .pb{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px}
+  .pb-rx{background:rgba(52,211,153,.16);color:var(--g-strong)}
+  .pb-grey{background:rgba(251,146,60,.16);color:var(--g-weak)}
+  .pb-wada{background:rgba(248,113,113,.17);color:var(--g-low)}
+  .pb-cat{background:rgba(167,139,250,.16);color:var(--research)}
+
+  details.disc{margin-top:26px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:4px 16px}
+  details.disc summary{cursor:pointer;padding:12px 0;font-weight:600;color:var(--muted)}
+  details.disc p{font-size:13px;color:var(--muted)}
+  footer{max-width:1200px;margin:0 auto;padding:24px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--line)}
+  .hidden{display:none}
+  @media(max-width:540px){h1{font-size:24px}.controls-inner{flex-direction:column;align-items:stretch}}
+</style>
+</head>
+<body>
+<header>
+  <h1>💊 JM Supplement &amp; Peptide Wiki</h1>
+  <div class="sub">Your tracking sheet, enriched with evidence grades, effective doses, and safety from Examine.com, PubMed, FDA &amp; WADA.</div>
+  <div class="stats" id="stats"></div>
+  <div class="tabs">
+    <div class="tab active" data-view="supps">Supplements</div>
+    <div class="tab" data-view="peptides">Peptides</div>
+    <div class="tab" data-view="lifestyle">Lifestyle</div>
+  </div>
+</header>
+
+<!-- ============ SUPPLEMENTS VIEW ============ -->
+<div id="view-supps">
+  <div class="controls">
+    <div class="wrap" style="padding-bottom:0">
+      <div class="controls-inner">
+        <input type="search" id="search" placeholder="Search substance, benefit, evidence…" autocomplete="off">
+        <div class="chips" id="stackChips"></div>
+        <div class="chips" id="gradeChips"></div>
+        <select id="sort">
+          <option value="default">Sort: Stack order</option>
+          <option value="name">Name A–Z</option>
+          <option value="grade">Evidence (strong→weak)</option>
+          <option value="tier">Tier (1→4)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="callout" id="suggBanner" style="display:none">
+      <b>Suggested additions</b> (striped border) are evidence-based complements I'd consider for your goals — they're <b>not</b> on your current sheet. Top 5 highest-yield, lowest-risk: Glycine (GlyNAC synergy), Zinc (balances your copper), Boron (free-T), Selenium (glutathione cofactor), Electrolytes (the real athletic gap your Mg-threonate doesn't cover).
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty">No substances match your filters.</div>
+
+    <div class="skip">
+      <h4>⏭️ Researched but skip / overhyped</h4>
+      <ul>
+        <li><b>Fadogia agrestis</b> — zero human studies; rodent-only T data with testicular/kidney/liver toxicity at ~1 month. Tongkat Ali achieves the same goal with real human evidence.</li>
+        <li><b>Resveratrol</b> — weak, inconsistent human data, poor bioavailability; some trials show it <i>blunts</i> exercise adaptations.</li>
+        <li><b>Spermidine</b> — 12-mo SmartAge RCT showed no memory benefit; human longevity case unproven.</li>
+        <li><b>Fisetin</b> — senolytic hype rests on mouse data; no positive human hard-endpoint trials yet.</li>
+        <li><b>Inositol</b> — no general cognition/sleep case for a healthy male absent anxiety/PCOS/metabolic indication.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PEPTIDES VIEW ============ -->
+<div id="view-peptides" class="hidden">
+  <div class="controls">
+    <div class="wrap" style="padding-bottom:0">
+      <div class="controls-inner">
+        <input type="search" id="psearch" placeholder="Search peptides…" autocomplete="off">
+        <div class="chips" id="pcatChips"></div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="callout">
+      <b>⚠️ Read first.</b> With only two exceptions (<b>Tesamorelin</b> and <b>hCG</b>), nothing here is an FDA-approved drug for the use people seek it for. Most rest on surrogate endpoints (raising GH/IGF-1 or LH/T), not hard outcomes, and most are sold grey-market with no GMP oversight — meaning real risk of contamination, mislabeled content, and dose inaccuracy. <b>WADA bans the large majority.</b> FDA 503A compounding status shifted repeatedly 2023–2026 and several items remain contested — verify before any clinical reliance. This is an educational reference, not medical advice or procurement guidance.
+    </div>
+    <div class="grid" id="pgrid"></div>
+  </div>
+</div>
+
+<!-- ============ LIFESTYLE VIEW ============ -->
+<div id="view-lifestyle" class="hidden">
+  <div class="wrap">
+    <h2 class="section-h"><span class="dot"></span>Lifestyle &amp; Protocol Notes</h2>
+    <div class="ls-grid">
+      <div class="ls">
+        <h4>🧊 Cold Showers — Cold Shock Proteins</h4>
+        <p>Go cold enough to shiver, then stop shivering — releases cold shock proteins that raise <b>norepinephrine</b> (mood, attention) and act as a strong anti-inflammatory.</p>
+        <ul>
+          <li>Most valuable when exercise lasts <b>3+ hours</b>.</li>
+          <li>For shorter sessions, cold within ~1 hour of lifting can <b>reduce gains</b> — time it carefully.</li>
+          <li>Cold during a rest break between two bouts improved performance on the second bout.</li>
+        </ul>
+      </div>
+      <div class="ls">
+        <h4>🏋️ Training — Compound Over Isolation</h4>
+        <p>Isolation moves and machines use fewer stabilizers, encourage bad form, and carry higher injury risk for less return.</p>
+        <ul>
+          <li>Core lifts: <b>bench, heavy squat, overhead press, rows, deadlifts</b> — barbell over dumbbell for symmetry &amp; stabilization.</li>
+          <li>Lat pulldown is the main worthwhile machine — only if pull-ups aren't yet possible.</li>
+          <li>More routines: <a href="https://www.onnit.com/academy/fitness/" target="_blank" rel="noopener">onnit.com/academy/fitness</a></li>
+        </ul>
+      </div>
+      <div class="ls">
+        <h4>⚡ Testosterone Optimization</h4>
+        <ul>
+          <li><b>Deadlifts &amp; wood chopping</b> — most efficient known T-boosting exercises.</li>
+          <li>Cut <b>refined sugars</b> — beneficial effect on T levels.</li>
+          <li><b>Sleep</b>: each hour contributes ~10% of nightly T production.</li>
+        </ul>
+        <p class="src">Resources: <a href="https://anabolicmen.com/" target="_blank" rel="noopener">anabolicmen.com</a> · <a href="http://testosteronestudies.com/" target="_blank" rel="noopener">testosteronestudies.com</a></p>
+      </div>
+      <div class="ls">
+        <h4>🎥 Coaches Worth Following</h4>
+        <ul>
+          <li><b>Scooby1961</b> — sound natural-bodybuilding advice; free meal &amp; exercise programs.</li>
+          <li><b>Athlean-X</b> — mostly solid; some info selectively framed to sell his program.</li>
+        </ul>
+      </div>
+      <div class="ls">
+        <h4>🛒 Trusted Vendors</h4>
+        <div class="vendors" id="vendors"></div>
+      </div>
+      <div class="ls">
+        <h4>📦 Sources &amp; Quality (how to buy well)</h4>
+        <p><b>Supplements</b> — legal everywhere; quality is the variable. Prefer third-party-tested brands: USP Verified, NSF (NSF Certified for Sport if WADA matters), ConsumerLab, or a batch CoA (identity + potency + heavy-metals/micro).</p>
+        <ul>
+          <li><b>FDA-approved peptides</b> (Tesamorelin, hCG): prescription via a licensed pharmacy.</li>
+          <li><b>Compounded peptides</b>: only a licensed 503A/503B pharmacy with a prescription, for substances currently permitted. CJC-1295, ipamorelin, BPC-157, TB-500 are <i>not</i> legitimately compoundable as of mid-2026 — verify.</li>
+          <li><b>Investigational</b> (Retatrutide): clinical trials only until approval.</li>
+        </ul>
+        <p class="src">Grey-market "research peptide" sellers of unapproved injectables are intentionally not listed — mislabeling, contamination, and legal risk. Full detail: <b>Sources and Suppliers</b> note in the vault.</p>
+      </div>
+      <div class="ls">
+        <h4>🔬 Original "To Research" List</h4>
+        <div class="vendors">
+          <span class="vendor">Forskolin</span><span class="vendor">Cayenne pepper</span>
+          <span class="vendor">Indole-3-Carbinol (I3C)</span><span class="vendor">Buckminsterfullerene</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <details class="disc">
+    <summary>⚠️ Disclaimer — read before acting on anything here</summary>
+    <p>This dashboard is a personal knowledge archive compiled from your notes and enriched with public evidence sources (Examine.com, PubMed, FDA, WADA). It is not medical advice. Evidence grades reflect human-trial strength as of mid-2026 and can change. Many entries — especially in the Peptides section — are not FDA-approved, are sold grey-market, and/or are banned in sport; several carry real safety unknowns and drug interactions (e.g., CBD + CYP450, berberine + CYP3A4, copper:zinc balance, ashwagandha + thyroid). Confirm anything with a qualified clinician before changing your regimen.</p>
+  </details>
+</div>
+
+<footer>
+  Built from <b>JM supplements</b> sheet · <span id="count2"></span> substances + <span id="pcount2"></span> peptides · evidence layer from Examine.com, PubMed, FDA &amp; WADA. Self-contained — open or share this file anywhere.
+</footer>
+
+<script>
+const G={S:"Strong",M:"Moderate",P:"Preliminary",W:"Weak",L:"Minimal"};
+const DATA = [
+  // ===== DAILY CORE =====
+  {name:"Vitamin D3 + K2",tier:"1",stack:"Daily Core",dose:"5000 IU",sol:"Fat",freq:"1× / day",grade:G.M,
+   note:"Immune support, anti-cancer (per your notes).",src:"Sun; sun-browned mushrooms",
+   link:"https://www.iherb.com/pr/Now-Foods-Vitamin-D-3-High-Potency-5-000-IU-120-Softgels/10421",
+   evidence:"Reliably lowers PTH and (700+ IU/day with calcium) reduces fall/fracture risk in older adults. Does NOT robustly improve depression, performance, or all-cause mortality in non-deficient people. K2 (MK-7) arterial-calcification data is preliminary.",
+   evDose:"D3 1,000–2,000 IU/day maintenance (UL 4,000); K2 as MK-7 90–200 mcg/day.",
+   safety:"Don't exceed 10,000 IU/day unsupervised (hypercalcemia). K2 interferes with warfarin. Needs magnesium for activation.",
+   evSrc:"Examine.com; AVADEC RCT (Circulation)"},
+  {name:"Sulforaphane",tier:"1",stack:"Daily Core",dose:"",sol:"",freq:"Daily",grade:G.P,
+   note:"Activates anti-cancer / anti-inflammatory genes (NRF2).",src:"Broccoli sprouts",
+   evidence:"Potent NRF2 activator; small RCTs hint at autism behavior and airway-inflammation signals, but trials are small and not consistently replicated. Mostly mechanistic; bioavailability highly variable.",
+   evDose:"No validated dose. Autism trials ~50–150 µmol/day. Prefer glucoraphanin + active myrosinase.",
+   safety:"Well tolerated short-term; long-term data limited. Mild GI upset; theoretical CYP1A modulation.",
+   evSrc:"Examine.com; Singh 2014 PNAS; Mol Autism 2021"},
+  {name:"NeuroMag (Mg L-Threonate)",tier:"",stack:"Daily Core",dose:"2000 mg",sol:"",freq:"TID",grade:G.P,
+   note:"Brain-penetrating magnesium for cognition.",src:"",
+   evidence:"Small (often industry-linked) RCTs report memory/reaction-time gains at 2 g/day. A POOR choice for correcting general Mg deficiency — little elemental Mg per dose.",
+   evDose:"1–2 g/day Magtein (~144 mg elemental Mg). For deficiency use citrate/glycinate (Mg UL 350 mg/day supplemental).",
+   safety:"Low risk; GI/diarrhea at high doses. Caution in renal impairment. Separate from some antibiotics by 2+ h.",
+   evSrc:"Examine.com; Magtein RCTs (Nutrients 2022)"},
+  {name:"N-Acetyl Cysteine (NAC)",tier:"1",stack:"Daily Core",dose:"600 mg",sol:"",freq:"At night ×1",grade:G.M,
+   note:"Glutathione precursor; antioxidant & detox.",src:"",
+   evidence:"Strong as glutathione precursor / acetaminophen antidote. Moderate COPD mucolytic. Preliminary & inconsistent for OCD, trichotillomania, addiction craving.",
+   evDose:"600–2,400 mg/day; psychiatric use 1,200–2,400 mg/day for 10–16 wks.",
+   safety:"GI upset main effect. Theoretical additive hypotension with nitroglycerin. <span class='flag'>Pairs with glycine → GlyNAC (see Suggested).</span>",
+   evSrc:"Examine.com; psychiatric NAC reviews"},
+  {name:"NALT (N-Acetyl L-Tyrosine)",tier:"1",stack:"Daily Core",dose:"350 mg",sol:"Water",freq:"",grade:G.M,
+   note:"Dopamine precursor; focus under stress.",src:"",
+   link:"https://www.reddit.com/r/Nootropics/comments/n4tq1s/consistently_amazing_effects_from_ltyrosine_and/",
+   evidence:"Preserves working memory under ACUTE stress (cold, altitude, sleep loss) only. Does NOT raise baseline dopamine or help rested people. NALT is a poor oral tyrosine source — plain L-tyrosine preferred.",
+   evDose:"100–150 mg/kg (~7–13.5 g) L-tyrosine before stressor in trials.",
+   safety:"Contraindicated with MAOIs (hypertensive crisis). Separate from levodopa by 2+ h. Caution in hyperthyroidism.",
+   evSrc:"Examine.com; Jongkees 2015 review"},
+  {name:"Niacin (B3)",tier:"1",stack:"Daily Core",dose:"500 mg",sol:"Water",freq:"1× / day",grade:G.S,
+   note:"The flush is the point — avoid slow-release.",src:"",
+   link:"https://www.iherb.com/pr/Now-Foods-Niacin-500-mg-100-Capsules/30566",
+   evidence:"STRONG for lipids (raises HDL, lowers LDL/TG) but large RCTs (AIM-HIGH, HPS2-THRIVE) show NO cardiovascular-event benefit added to statins, plus excess harm. NAD+/longevity claims unproven.",
+   evDose:"≥1 g/day for lipid effects (trials 1–3 g/day).",
+   safety:"<span class='flag'>Raises insulin resistance/glucose, hepatotoxicity (esp. sustained-release), gout, flushing. Adds little to modern statins.</span>",
+   evSrc:"Examine.com; AIM-HIGH (NEJM 2011); HPS2-THRIVE"},
+  {name:"P5P (active B6)",tier:"1",stack:"Daily Core",dose:"50 mg",sol:"Water",freq:"1× / day",grade:G.W,
+   note:"Neurotransmitter-synthesis cofactor.",src:"",
+   evidence:"Essential coenzyme, but no robust unique benefit in replete people. Modest evidence in PMS, pregnancy nausea, homocysteine (with other B-vitamins).",
+   evDose:"RDA ~1.3–1.7 mg/day; targeted 10–50 mg/day. Little reason to exceed.",
+   safety:"<span class='flag'>Sensory neuropathy from prolonged high-dose B6 — avoid >50 mg/day long-term (EFSA UL 12 mg).</span> Reduces levodopa efficacy without carbidopa.",
+   evSrc:"Examine.com; NIH ODS / EFSA"},
+  {name:"Omega-3 Fish Oil",tier:"1",stack:"Daily Core",dose:"2250 mg",sol:"Water",freq:"3× w/ breakfast",grade:G.S,
+   note:"Super nutrient — EPA/DHA.",src:"Fatty fish",
+   link:"https://www.amazon.com/gp/product/B01GV4O37E",
+   evidence:"STRONG for lowering triglycerides; moderate for depression (EPA-driven); weak/negative for general CVD-event prevention.",
+   evDose:"General 250 mg–1 g EPA+DHA/day; TG-lowering 2–4 g/day; depression ~1–2 g/day EPA.",
+   safety:"Choose fresh/3rd-party-tested (oxidation). >3 g/day mild antiplatelet — caution with anticoagulants/surgery; high-dose EPA small AFib signal.",
+   evSrc:"Examine.com; Liao 2019 Transl Psychiatry"},
+  {name:"ALCAR (Acetyl-L-Carnitine)",tier:"",stack:"Daily Core",dose:"500 mg",sol:"Water",freq:"TID",grade:G.M,
+   note:"Cognitive support; upregulates dopamine.",src:"",
+   evidence:"Moderate for diabetic/peripheral neuropathic pain (~20–25% reduction) and mild mood improvement in depression; preliminary for slowing MCI. Does NOT help healthy young cognition.",
+   evDose:"1,000–2,000 mg/day (mood/neuropathy); 1,500–3,000 mg/day (cognition), split.",
+   safety:"Mild GI upset, fishy odor, agitation. May increase seizures in seizure-prone; theoretical additive with thyroid/warfarin.",
+   evSrc:"Examine.com; neuropathy & depression meta-analyses"},
+  {name:"Alpha-GPC",tier:"",stack:"Daily Core",dose:"300–600 mg",sol:"",freq:"Pre-task / split",grade:G.M,
+   note:"Acetylcholine precursor.",src:"",
+   evidence:"Moderate for cognitive symptoms in dementia (esp. with AChE inhibitors); preliminary for acute power/jump force. No proven nootropic benefit in healthy adults.",
+   evDose:"1,200 mg/day (3×400) cognitive; 300–600 mg pre-exercise for power.",
+   safety:"<span class='flag'>TMAO precursor — a 2021 cohort linked ≥12-mo use to higher stroke risk (unconfirmed). Caution with CV/stroke risk.</span>",
+   evSrc:"Examine.com (incl. 2021 cohort)"},
+  {name:"R-ALA",tier:"",stack:"Daily Core",dose:"125 mg",sol:"",freq:"TID",grade:G.M,
+   note:"Mitochondrial / antioxidant support.",src:"",
+   evidence:"Moderate-to-strong for diabetic peripheral neuropathy (~2.4-pt symptom reduction at 600 mg/day). Glycemic/BP effects minor. R-isomer not clearly superior to racemic.",
+   evDose:"300–600 mg/day (neuropathy trials 600 mg/day).",
+   safety:"Take on empty stomach. Lowers glucose — additive with antidiabetics (hypoglycemia). May reduce thyroid hormone.",
+   evSrc:"Examine.com (grade B); ALADIN/SYDNEY meta-analyses"},
+  {name:"Ubiquinone (CoQ10)",tier:"1",stack:"Daily Core",dose:"100 mg",sol:"Fat",freq:"Daily w/ fat",grade:G.M,
+   note:"Mitochondrial energy / electron transport.",src:"",
+   evidence:"Moderate for migraine prevention (300 mg/day) and lowering inflammatory markers (CRP, IL-6); modest glycemic benefit. Statin-myalgia benefit is mixed/modest.",
+   evDose:"100–200 mg/day general; 300 mg/day migraine. No benefit above ~300 mg.",
+   safety:"Well tolerated to 1,200 mg/day. May reduce warfarin effect (monitor INR). Ubiquinol absorbs better in older adults.",
+   evSrc:"Examine.com (2024 update)"},
+  {name:"Polygala Tenuifolia 20:1",tier:"1",stack:"Daily Core",dose:"100 mg",sol:"",freq:"1× / day",grade:G.W,
+   note:"Cognitive and mood support (traditional).",src:"",
+   evidence:"Very limited human data (only BT-11 extract). May slightly improve spatial organization in elderly but NOT memory recall; antidepressant/NGF claims are rodent-only.",
+   evDose:"Human trials 300 mg/day BT-11 (100 mg ×3).",
+   safety:"<span class='flag'>Thin human safety data. Saponin-rich root is GI-irritating/emetic at higher doses; avoid in gastritis/ulcers and pregnancy.</span>",
+   evSrc:"Examine.com (BT-11 trials only)"},
+
+  // ===== T / ENERGY =====
+  {name:"Caffeine",tier:"3",stack:"T / Energy",dose:"100–200 mg",sol:"",freq:"Need-based",grade:G.S,
+   note:"Focus & awareness; can disrupt sleep.",src:"Coffee (~80–110 mg/cup)",
+   evidence:"STRONG for acute alertness, reaction time, and athletic performance (endurance, power, strength); potentiates analgesics. Does NOT meaningfully aid weight loss (tolerance) and doesn't raise CV risk at moderate intake.",
+   evDose:"Cognition 100–200 mg; performance 3–6 mg/kg ~60 min pre-exercise.",
+   safety:"≤400 mg/day (≤200 mg pregnancy). Take ≥9 h before bed. Cycle to restore blunted effects; caution with anxiety/heart conditions.",
+   evSrc:"Examine.com; NHANES"},
+  {name:"L-Theanine",tier:"3",stack:"T / Energy",dose:"200 mg",sol:"",freq:"With & before caffeine",grade:G.M,
+   note:"Smooths caffeine; mood & focus.",src:"Green tea",
+   evidence:"Moderate-to-preliminary for reducing anxiety without sedation. The caffeine+theanine COMBO is the best-supported cognitive finding — better attention-switching and alertness than either alone, with fewer jitters.",
+   evDose:"Alone 100–400 mg; combo ~200 mg theanine + 100–200 mg caffeine.",
+   safety:"Very well tolerated, no established UL. Combo inherits caffeine's cautions (theanine may blunt the BP rise).",
+   evSrc:"Examine.com; systematic review PMC8794723"},
+  {name:"Ashwagandha (India)",tier:"3",stack:"T / Energy",dose:"600 mg",sol:"Both (poor in fat)",freq:"Split AM/PM",grade:G.S,
+   note:"Promotes T growth. ⚠️ Risky if depressed (GABA-agonist).",src:"",
+   evidence:"STRONGEST for stress/anxiety/cortisol (multiple meta-analyses). Moderate for sleep. <span class='flag'>Testosterone evidence is WEAK — only ~4 small 8-wk trials in stressed/overweight/infertile men; not replicated in healthy normal-T young men. Do not treat as a proven T-booster.</span>",
+   evDose:"250–600 mg/day standardized root; most-studied 600 mg/day split.",
+   safety:"Rare hepatotoxicity; may raise thyroid hormones (caution with thyroid meds). Avoid in pregnancy & hormone-sensitive prostate cancer.",
+   evSrc:"Examine.com; NIH ODS; Smith PMC8166567"},
+  {name:"DIM",tier:"3",stack:"T / Energy",dose:"100–200 mg",sol:"Fat",freq:"With fatty meal",grade:G.W,
+   note:"Estrogen metabolism; free-T support.",src:"Cruciferous vegetables",
+   evidence:"<span class='flag'>WEAK in humans — estrogen claims rest on mechanistic/surrogate data (urinary 2-OH:16α ratio); NO robust RCTs show clinical outcomes. Biphasic — excess may induce aromatase.</span>",
+   evDose:"~100 mg/day alters urinary estrogens; trials 108–300 mg/day.",
+   safety:"<span class='flag'>Modulates CYP — LOWERS tamoxifen's active metabolite. Avoid on tamoxifen/hormone therapy without oncologist sign-off.</span> GI upset, harmless dark urine.",
+   evSrc:"Examine.com; MSKCC; Thomson PMC5571834"},
+  {name:"Copper",tier:"3",stack:"T / Energy",dose:"—",sol:"",freq:"1× / day",grade:G.L,
+   note:"\"Copper water\" — let water sit overnight in pure copper.",src:"",
+   evidence:"<span class='flag'>Essential but most people are already replete — supplementation shows NO demonstrated benefit and \"copper water\" has no clinical support. Excess copper is linked to harm (oxidative stress; Alzheimer's severity).</span>",
+   evDose:"RDA ~0.9 mg/day; diet already supplies enough. No supplemental purpose if replete.",
+   safety:"<span class='flag'>UL 10 mg/day. You take copper but no zinc — this skews Cu:Zn. Add zinc (see Suggested) and keep them balanced.</span>",
+   evSrc:"Examine.com; NIH/National Academies DRIs"},
+  {name:"Creatine",tier:"4",stack:"T / Energy",dose:"5 g",sol:"Water",freq:"1× / day",grade:G.S,
+   note:"Muscle recovery after exercise.",src:"Red meat",
+   link:"https://www.iherb.com/pr/Optimum-Nutrition-Micronized-Creatine-Powder-Unflavored-2-64-lb-1-2-kg/56443",
+   evidence:"Among the most well-evidenced supplements: STRONG for strength, power, and (with training) lean mass. Cognition emerging — reduces mental fatigue under sleep deprivation; general cognitive benefit not established.",
+   evDose:"3–5 g/day maintenance indefinitely; optional load 0.3 g/kg/day ×5–7 days.",
+   safety:"Very well tolerated. Mild GI from large single doses; modest water-weight gain. No reliable kidney harm in healthy people.",
+   evSrc:"Examine.com; 2024 systematic reviews"},
+
+  // ===== SLEEP / NIGHT =====
+  {name:"Apigenin",tier:"1",stack:"Sleep / Night",dose:"50 mg",sol:"Water",freq:"Night (max 100 mg)",grade:G.W,
+   note:"Anti-cancer; supports REM (per your notes).",src:"Chamomile",
+   link:"https://www.ncbi.nlm.nih.gov/pubmed/20306120",
+   evidence:"<span class='flag'>WEAK — essentially NO human RCTs of ISOLATED apigenin for sleep.</span> Human data come from whole chamomile extracts (modest subjective sleep-quality gain, not duration). GABA-A mechanism mostly rodent.",
+   evDose:"No validated isolated dose; market ~50 mg before bed. Chamomile trials ~270–1500 mg/day.",
+   safety:"Additive sedation with CNS depressants; inhibits glucuronidation (caution with narrow-therapeutic drugs). Asteraceae allergy.",
+   evSrc:"Examine.com; chamomile meta-analysis"},
+  {name:"Lemon Balm 10:1",tier:"1",stack:"Sleep / Night",dose:"500 mg",sol:"Water",freq:"At night",grade:G.M,
+   note:"Mood & cognitive health; calming.",src:"",
+   evidence:"Moderate (small-trial) for calmness/anxiety; preliminary for sleep. Cognition mixed — improves accuracy/calmness but can slow reaction time (sedation).",
+   evDose:"300–1600 mg/day extract/dried leaf.",
+   safety:"GRAS, well tolerated short-term. Additive with CNS depressants/alcohol; theoretical thyroid-replacement interference. Caution in pregnancy.",
+   evSrc:"Examine.com; Ghazizadeh 2021 Phytother Res"},
+  {name:"Melatonin",tier:"1",stack:"Sleep / Night",dose:"0.5–3 mg",sol:"",freq:"30–60 min pre-bed",grade:G.S,
+   note:"Sleep-onset hormone — keep doses low.",src:"",
+   evidence:"STRONG for circadian shifting (jet lag, delayed sleep phase, shift work); moderate for modestly shortening sleep onset (~7–12 min). Does NOT meaningfully increase total sleep time.",
+   evDose:"0.5–3 mg for onset; 0.2–0.5 mg for phase-shifting. Diminishing returns above ~4 mg.",
+   safety:"<span class='flag'>OTC products frequently mislabeled (JAMA: 74–347% of label; 26% contained serotonin) — choose USP-verified.</span> Higher doses → next-day grogginess.",
+   evSrc:"Examine.com; JAMA 2023; J Pineal Res 2022"},
+  {name:"CBD",tier:"1",stack:"Sleep / Night",dose:"varies",sol:"Fat",freq:"At night",grade:G.M,
+   note:"Relaxation; may aid sleep.",src:"",
+   evidence:"STRONG RCT evidence ONLY for pharmaceutical CBD (Epidiolex) in rare epilepsies. Anxiety/sleep/pain evidence is preliminary, mixed, and from doses far above OTC products.",
+   evDose:"Anxiety research ~300–600 mg acute — not comparable to OTC 10–50 mg (effective dose unproven).",
+   safety:"<span class='flag'>Inhibits CYP3A4 & CYP2C19 — raises levels of co-administered drugs; dose-dependent liver-enzyme elevations; raises INR with warfarin. Caution with anticonvulsants/blood thinners; monitor LFTs.</span>",
+   evSrc:"Examine.com; Epidiolex FDA label"},
+
+  // ===== RACETAMS =====
+  {name:"Aniracetam",tier:"1",stack:"Racetams",dose:"750–1500 mg",sol:"Fat",freq:"Split, w/ fat",grade:G.P,
+   note:"Ampakine nootropic; mood & cognition.",src:"",
+   evidence:"<span class='flag'>Limited human evidence — mostly animal or cognitively-impaired populations; benefits in healthy adults largely anecdotal.</span> Not an FDA-approved supplement (research chemical in US).",
+   evDose:"750–1500 mg/day split into 2 doses.",
+   safety:"Headache, anxiety, dizziness, GI upset. Unregulated supply = uncertain purity/dose.",
+   evSrc:"Baylor IR review; ScienceDirect"},
+  {name:"Phenylpiracetam",tier:"1",stack:"Racetams",dose:"100–200 mg",sol:"Both",freq:"Intermittent",grade:G.P,
+   note:"Stimulating racetam; focus & performance.",src:"",
+   evidence:"<span class='flag'>Thin Western data — most efficacy is older Russian research in clinical populations, not healthy-adult RCTs.</span> Genuine stimulant effects (built for Soviet cosmonauts).",
+   evDose:"100–200 mg/day, often split; effects last 4–6 h.",
+   safety:"<span class='flag'>BANNED IN SPORT — WADA Prohibited List S6, in-competition.</span> Tolerance develops within days — cycle. Insomnia, irritability, BP.",
+   evSrc:"WADA Prohibited List; BSCG"},
+  {name:"Oxiracetam",tier:"",stack:"Racetams",dose:"800–2400 mg",sol:"Water",freq:"Split, daytime",grade:G.P,
+   note:"Memory & logical-thinking racetam.",src:"",
+   evidence:"Mixed, mostly dated (1980s–90s). Best evidence in cognitive impairment (dementia, TBI); little for healthy-adult enhancement. Not an FDA-approved supplement.",
+   evDose:"800–2400 mg/day (1600 mg often effective in trials).",
+   safety:"Well tolerated in trials; mild insomnia, headache, restlessness. Unregulated US supply.",
+   evSrc:"Springer (scopolamine study); Nature 2025 TBI trial"},
+  {name:"Sabroxy",tier:"",stack:"Racetams",dose:"100–300 mg",sol:"",freq:"Daytime",grade:G.P,
+   note:"Oroxylum extract; dopamine support.",src:"",
+   evidence:"STRONGEST human data of the racetam group — one 12-wk RCT (n=82, 2021) in adults with mild cognitive impairment improved episodic/working memory vs placebo. Caveats: single trial, MCI (not healthy), several null endpoints.",
+   evDose:"Trial used 500 mg twice daily; supplements often 100–300 mg/day.",
+   safety:"Well tolerated except mild GI/headache. Botanical supplement in US — verify purity.",
+   evSrc:"Lopresti 2021 Front Aging Neurosci (PMID 34531736)"},
+
+  // ===== COMPLEMENTARY (SUGGESTED) =====
+  {name:"Zinc",suggested:true,stack:"Suggested",dose:"10–25 mg",sol:"",freq:"Separate from copper",grade:G.M,
+   note:"Balances your copper (Cu:Zn ratio) — most T-relevant mineral when deficient.",src:"",
+   evidence:"Restores testosterone in zinc-deficient/low-status men; little effect if already replete. You take copper but no zinc, skewing the ratio.",
+   evDose:"10–25 mg/day elemental (picolinate/bisglycinate). Keep ~8:1–15:1 zinc:copper.",
+   safety:">40 mg/day long-term induces copper deficiency — don't overshoot since you already supplement copper. Take apart from copper.",
+   evSrc:"Examine.com (Zinc)"},
+  {name:"Boron",suggested:true,stack:"Suggested",dose:"6–10 mg",sol:"",freq:"1× / day",grade:G.M,
+   note:"Raises free-T (lowers SHBG) + lowers estradiol — pairs with your DIM.",src:"",
+   evidence:"Small trials: ~28% rise in free-T and drop in estradiol after 1 week at 10 mg in men; longer-term total-T effect less consistent.",
+   evDose:"6–10 mg/day.",
+   safety:"Well tolerated; UL ~20 mg/day. Avoid megadoses.",
+   evSrc:"Naghii 2011 (PMID 21129941); Examine.com"},
+  {name:"Tongkat Ali",suggested:true,stack:"Suggested",dose:"200–400 mg",sol:"",freq:"Daily",grade:G.M,
+   note:"The one botanical T-support agent with human meta-analytic backing — fills the natural-T slot without Fadogia's risk.",src:"",
+   evidence:"Meta-analysis (5 RCTs) shows significant rise in total testosterone, strongest in hypogonadal men; also reduces cortisol/stress.",
+   evDose:"200–400 mg/day standardized aqueous extract (e.g., Physta).",
+   safety:"Tolerated short-term; long-term data thin. Heavy-metal contamination is real — buy standardized, tested product.",
+   evSrc:"Eurycoma meta-analysis PMC9415500"},
+  {name:"Glycine (→ GlyNAC)",suggested:true,stack:"Suggested",dose:"3 g pre-bed",sol:"Water",freq:"Night",grade:G.M,
+   note:"Standout pick — completes GlyNAC with your NAC for glutathione + longevity, and doubles as a sleep aid.",src:"",
+   evidence:"GlyNAC RCTs in older adults raised glutathione, lowered oxidative stress, improved mitochondrial function, gait speed, insulin sensitivity. 3 g pre-bed also lowers core temp and improves sleep quality.",
+   evDose:"3–6 g/day (GlyNAC trials ~100 mg/kg glycine + 100 mg/kg NAC).",
+   safety:"Very safe.",
+   evSrc:"GlyNAC RCT (PMID 35975308); Examine.com"},
+  {name:"Selenium",suggested:true,stack:"Suggested",dose:"100–200 mcg",sol:"",freq:"Daily",grade:G.M,
+   note:"Glutathione-peroxidase cofactor — amplifies the glutathione system your NAC (+glycine) feeds.",src:"",
+   evidence:"Benefit when intake is low; flat if already replete. Synergy with your antioxidant stack, not redundancy.",
+   evDose:"100–200 mcg/day (don't exceed 400 mcg total).",
+   safety:"Narrow window — selenosis above ~400 mcg/day. Account for diet (Brazil nuts).",
+   evSrc:"Examine.com (Selenium)"},
+  {name:"Electrolytes (Na/K)",suggested:true,stack:"Suggested",dose:"~1–2 g Na",sol:"Water",freq:"Around training",grade:G.S,
+   note:"The real athletic gap — your Mg-threonate is brain-targeted and doesn't cover sweat/training electrolyte needs.",src:"",
+   evidence:"Strong for performance/hydration when training and sweating.",
+   evDose:"Individualize; ~1–2 g sodium around hard/long sessions + potassium.",
+   safety:"Watch total sodium if hypertensive.",
+   evSrc:"Examine.com (Sodium)"},
+  {name:"Beta-Alanine",suggested:true,stack:"Suggested",dose:"3.2–6.4 g",sol:"Water",freq:"Daily, split",grade:G.S,
+   note:"Buffers muscle pH for 1–4 min efforts — distinct lane from creatine & citrulline.",src:"",
+   evidence:"STRONG — reliable improvement in high-intensity exercise capacity in the 60–240 s range (carnosine buffering).",
+   evDose:"3.2–6.4 g/day, split to limit tingling.",
+   safety:"Harmless paresthesia (tingling) only.",
+   evSrc:"Examine.com (Beta-Alanine)"},
+  {name:"Citrulline Malate",suggested:true,stack:"Suggested",dose:"6–8 g",sol:"Water",freq:"~60 min pre-workout",grade:G.M,
+   note:"Adds vasodilation/pump + fatigue-reduction; pairs cleanly with creatine.",src:"",
+   evidence:"Improves high-rep resistance performance and reduces soreness; some endurance benefit.",
+   evDose:"6–8 g ~60 min pre-workout.",
+   safety:"Very safe; mild GI at high doses.",
+   evSrc:"Examine.com (Citrulline)"},
+  {name:"Urolithin A",suggested:true,stack:"Suggested",dose:"500–1000 mg",sol:"",freq:"Daily",grade:G.M,
+   note:"Mitophagy mechanism absent from your stack — complements CoQ10/ALCAR (function) with mitochondrial recycling.",src:"",
+   evidence:"RCTs show improved muscle endurance and mitochondrial biomarkers in older adults; strength/ATP gains less consistent. Bridges longevity + recovery.",
+   evDose:"500–1000 mg/day.",
+   safety:"Well tolerated; main downside is cost.",
+   evSrc:"Urolithin A RCT (PMID 35050355)"},
+  {name:"Taurine",suggested:true,stack:"Suggested",dose:"1–3 g",sol:"Water",freq:"Daily",grade:G.M,
+   note:"Two buckets at once — cardiometabolic/recovery (human) + longevity (mostly animal).",src:"",
+   evidence:"Moderate human evidence for cardiometabolic & exercise; longevity data still mostly animal — don't oversell the anti-aging headline.",
+   evDose:"1–3 g/day.",
+   safety:"Very safe.",
+   evSrc:"Examine.com (Taurine)"},
+  {name:"Berberine",suggested:true,stack:"Suggested",dose:"500 mg ×2–3",sol:"",freq:"With meals",grade:G.M,
+   note:"AMPK/glucose lever absent from the stack — closest OTC analog to metformin for metabolic longevity.",src:"",
+   evidence:"Moderate-strong for glucose/lipids — lowers fasting glucose, HbA1c, LDL.",
+   evDose:"500 mg 2–3×/day with meals.",
+   safety:"<span class='flag'>GI upset common; meaningful CYP3A4 drug interactions (affects many meds); not in pregnancy. Cycle/monitor.</span>",
+   evSrc:"Examine.com (Berberine)"},
+  {name:"Bacopa Monnieri",suggested:true,stack:"Suggested",dose:"300 mg",sol:"",freq:"Daily w/ food",grade:G.M,
+   note:"Best-evidenced botanical for memory consolidation — a chronic, adaptive complement to your acute cognition agents.",src:"",
+   evidence:"Meta-analyses show improved memory/recall, but effect builds over 8–12 weeks.",
+   evDose:"300 mg/day standardized (≥50% bacosides).",
+   safety:"GI upset common; take with food. Mild sedation in some.",
+   evSrc:"Examine.com (Bacopa)"},
+  {name:"Lion's Mane",suggested:true,stack:"Suggested",dose:"500–1000 mg",sol:"",freq:"Daily",grade:G.P,
+   note:"NGF/neurotrophic angle distinct from your cholinergic stack and adaptogen.",src:"",
+   evidence:"Preliminary — small human trials suggest mild cognitive and mood benefit; needs larger replication.",
+   evDose:"500–1000 mg/day extract.",
+   safety:"Very safe; rare skin/respiratory allergy.",
+   evSrc:"Examine.com (Lion's Mane)"},
+  {name:"B12 + Methylfolate",suggested:true,stack:"Suggested",dose:"B12 500–1000 mcg",sol:"Water",freq:"Daily",grade:G.M,
+   note:"Completes your methylation set — you take B6 (P5P) and niacin but no B12/folate.",src:"",
+   evidence:"Strong for lowering homocysteine; cognitive/energy benefit mainly if deficient or MTHFR variant.",
+   evDose:"Methylcobalamin 500–1000 mcg; methylfolate 400–800 mcg.",
+   safety:"Very safe. Don't supplement high folate without adequate B12 (masks deficiency).",
+   evSrc:"Examine.com (B12 / Folate)"},
+  {name:"Tart Cherry",suggested:true,stack:"Suggested",dose:"~480 mg",sol:"",freq:"Post-training / bed",grade:G.M,
+   note:"Targeted recovery for the post-hard-session window; mild sleep support that complements your sleep stack.",src:"",
+   evidence:"Reduces muscle soreness and speeds strength recovery after intense exercise; modest sleep benefit.",
+   evDose:"~480 mg concentrate or equivalent.",
+   safety:"Very safe (sugar load if juice).",
+   evSrc:"Examine.com (Tart Cherry)"}
+];
+
+const PEPTIDES = [
+  // T / HPG
+  {name:"hCG",cat:"T / HPG-Axis",grade:G.S,rx:"FDA-approved",wada:"Banned (males)",
+   what:"Mimics LH at the testicular receptor — drives intratesticular T and preserves testicular volume/fertility.",
+   evidence:"Best-supported agent here. FDA-approved for male hypogonadotropic hypogonadism, cryptorchidism, ovulation induction (Pregnyl, Novarel).",
+   status:"FDA-approved Rx. Since Mar 2020 regulated as a biologic → removed from 503A/503B compounding. WADA: prohibited in males (S2.2.1).",
+   safety:"Gynecomastia/estradiol rise (aromatization), fluid retention, mood changes, theoretical thromboembolism.",
+   dose:"Male fertility/TRT-adjunct ~500–1500 IU SC 2–3×/week."},
+  {name:"Gonadorelin (GnRH)",cat:"T / HPG-Axis",grade:G.M,rx:"Compounded Rx",wada:"Banned (males)",
+   what:"Synthetic GnRH; PULSATILE dosing stimulates pituitary LH/FSH (continuous dosing paradoxically suppresses).",
+   evidence:"Historically FDA-approved (Factrel/Lutrepulse) for diagnostic/ovulation use; modern TRT-adjunct use is off-label and lacks hCG's RCT base.",
+   status:"US products withdrawn (commercial, not safety). Now via 503A compounding (a peptide, still compoundable). WADA: prohibited in males.",
+   safety:"Well tolerated short-term. Key risk: non-pulsatile dosing suppresses the axis. Compounded sterility/quality unknowns.",
+   dose:"Men's-health protocols cite ~100–200 mcg SC 2–3×/week (short half-life makes non-pulsatile dosing imperfect)."},
+  {name:"Enclomiphene",cat:"T / HPG-Axis",grade:G.M,rx:"Not approved",wada:"Banned (all)",
+   what:"Oral SERM (not a peptide) — blocks estrogen feedback, raising endogenous LH/FSH/T while preserving sperm.",
+   evidence:"Phase II/III trials showed it raised T into normal range while preserving LH/FSH/sperm — an advantage over T gel. Gap: no proven symptom benefit.",
+   status:"NOT FDA-approved (Complete Response Letter Dec 2015). Compounding pharmacies + grey-market only. WADA: prohibited at all times (S4.2 SERM).",
+   safety:"SERM-class: visual disturbances, mood changes, hot flashes, theoretical VTE. Long-term safety in men unestablished.",
+   dose:"12.5–25 mg orally once daily."},
+  {name:"Kisspeptin-10",cat:"T / HPG-Axis",grade:G.P,rx:"Research-only",wada:"Banned (males)",
+   what:"Acts most upstream at KISS1R on hypothalamic GnRH neurons to trigger endogenous GnRH → LH/FSH → T.",
+   evidence:"Early human work (Imperial College) shows IV kisspeptin stimulates LH in healthy men. No Phase III; investigational only.",
+   status:"Research-chemical only (\"for research use only\"). No FDA approval. WADA: prohibited in males (kisspeptin & analogues explicitly named).",
+   safety:"Largely unknown beyond short infusions. Desensitization with continuous dosing. Grey-market purity unverified.",
+   dose:"Research infusions ~1–4 mcg/kg/h IV; no validated therapeutic dose."},
+
+  // GH secretagogues
+  {name:"Tesamorelin (Egrifta)",cat:"GH Secretagogue",grade:G.S,rx:"FDA-approved",wada:"Banned (all)",
+   what:"GHRH analog (DPP-IV-resistant) stimulating endogenous GH/IGF-1.",
+   evidence:"The only FDA-approved one in this class. Approved 2010 for HIV-lipodystrophy visceral fat; two Phase III RCTs (~806 pts) showed ~15–18% VAT reduction. Broad anti-aging use is off-label/unsupported.",
+   status:"FDA-approved Rx. WADA: banned at all times (S2) — approval doesn't exempt athletes.",
+   safety:"<span class='flag'>Raises IGF-1 — contraindicated in active malignancy; can worsen glucose tolerance.</span> Arthralgia, edema, injection-site reactions.",
+   dose:"2 mg SC once daily (Egrifta SV)."},
+  {name:"Sermorelin",cat:"GH Secretagogue",grade:G.P,rx:"Compounded Rx",wada:"Banned (all)",
+   what:"GHRH (1-29) analog stimulating pituitary GH release.",
+   evidence:"Historically approved for a pediatric diagnostic indication (Geref). Anti-aging/body-comp use is anecdotal/extrapolated.",
+   status:"No branded product today; supplied via compounding (strongest footing of this group, but swept into 2023–26 FDA peptide review). WADA: banned all times.",
+   safety:"Well tolerated short-term. Class IGF-1/water-retention concerns; long-term safety unstudied; compounded purity risk.",
+   dose:"~0.2–0.5 mg SC at bedtime."},
+  {name:"CJC-1295 (no DAC)",cat:"GH Secretagogue",grade:G.P,rx:"Research-only",wada:"Banned (all)",
+   what:"Short-acting GHRH analog (~30 min) driving pulsatile GH release; often stacked with ipamorelin.",
+   evidence:"Preliminary — small early-phase pharmacology only; modern stacked use is anecdotal.",
+   status:"<span class='flag'>Not FDA-approved; never legally compoundable under 503A (PCAC declined Category 1).</span> Research-chemical/grey-market. WADA: banned all times.",
+   safety:"IGF-1 elevation, water retention, insulin resistance, flushing; no long-term data; grey-market purity risk.",
+   dose:"~100 mcg SC, 1–3×/day."},
+  {name:"CJC-1295 with DAC",cat:"GH Secretagogue",grade:G.P,rx:"Research-only",wada:"Banned (all)",
+   what:"GHRH analog bound to albumin → half-life ~6–8 days; sustained (non-pulsatile) GH/IGF-1 elevation.",
+   evidence:"Preliminary — Teichman 2006 (JCEM) showed single doses raised GH 2–10× for ~6 days. Pharmacodynamics only; no outcome trials.",
+   status:"Not approved; research-chemical/grey-market; not on any compounding bulk list. WADA: banned all times.",
+   safety:"<span class='flag'>Sustained supraphysiologic IGF-1 is the headline concern (theoretical cancer/tissue growth)</span>, plus water retention, arthralgia, insulin resistance.",
+   dose:"~1–2 mg SC once or twice weekly."},
+  {name:"Ipamorelin",cat:"GH Secretagogue",grade:G.P,rx:"Research-only",wada:"Banned (all)",
+   what:"Selective ghrelin/GHS-R agonist pentapeptide; raises GH with minimal cortisol/prolactin effect.",
+   evidence:"Preliminary/animal-dominant — strong preclinical selectivity, limited human pharmacology, no outcome trials. Usually paired with CJC-1295.",
+   status:"<span class='flag'>Not approved; PCAC declined 503A Category 1 (not legitimately compoundable as of mid-2026).</span> Research-chemical/grey-market. WADA: banned all times.",
+   safety:"IGF-1 elevation, increased appetite, water retention, possible hyperglycemia; long-term safety unknown.",
+   dose:"~100–300 mcg SC, 1–3×/day."},
+  {name:"GHRP-2 / GHRP-6",cat:"GH Secretagogue",grade:G.P,rx:"Research-only",wada:"Banned (all)",
+   what:"Potent ghrelin/GHS-R agonist GH-releasing peptides (GHRP-6 especially stimulates hunger).",
+   evidence:"Preliminary — GHRP-2 is a GHD diagnostic in Japan; no outcome evidence for anti-aging/body-comp. Less selective than ipamorelin.",
+   status:"Not FDA-approved in US; research-chemical/grey-market; not on US compounding lists. WADA: banned all times (named GHRPs).",
+   safety:"Less selective — raise cortisol and prolactin plus appetite; IGF-1 elevation, water retention, possible insulin resistance.",
+   dose:"~100–300 mcg SC per dose (research/anecdotal)."},
+  {name:"MK-677 / Ibutamoren",cat:"GH Secretagogue",grade:G.P,rx:"Not approved",wada:"Banned (all)",
+   what:"Orally active non-peptide ghrelin/GHS-R agonist; sustained GH/IGF-1 increase.",
+   evidence:"<span class='flag'>Real Merck programs FAILED/halted: Alzheimer's (no cognitive benefit); hip-fracture trial halted over a congestive heart failure signal (6.5% vs 1.7%).</span>",
+   status:"Not FDA-approved for any indication; illegally sold as a \"SARM\"/supplement (not a legal dietary ingredient). WADA: banned all times.",
+   safety:"<span class='flag'>Heart-failure signal in elderly; marked insulin resistance/hyperglycemia; edema, lethargy, IGF-1 elevation.</span>",
+   dose:"~10–25 mg orally once daily (research/anecdotal)."},
+
+  // Longevity
+  {name:"Thymosin alpha-1",cat:"Longevity / Immune",grade:G.M,rx:"Not approved (US)",wada:"Not listed",
+   what:"28-aa thymic immunomodulator (TLR signaling, T-cell maturation).",
+   evidence:"Strongest of the longevity group — 30+ trials, >11,000 subjects (hepatitis B, sepsis, cancer-adjunct). Evidence is for IMMUNE indications, not longevity per se.",
+   status:"Not FDA-approved in US (marketed as Zadaxin in 35+ countries); domestically compounded/off-label, reported on FDA Category 2. Not specifically WADA-prohibited.",
+   safety:"Well tolerated in trials. US compounded purity concerns. Immunostimulation caution in autoimmune disease/transplant.",
+   dose:"Zadaxin label ~1.6 mg SC twice weekly."},
+  {name:"NAD+ / NMN / NR",cat:"Longevity / Immune",grade:G.P,rx:"Supplement (contested)",wada:"Not listed",
+   what:"NAD+ is a redox coenzyme (sirtuin/PARP signaling); supplemented directly or via precursors NMN/NR. Not a peptide.",
+   evidence:"Oral NR/NMN reliably raise NAD+ (target engagement confirmed) but downstream healthspan outcomes are heterogeneous/often null. No human lifespan evidence. IV NAD+ has ~no controlled outcome data.",
+   status:"NR is GRAS-affiliated; <span class='flag'>NMN's supplement status is contested by FDA (drug-exclusion position).</span> IV NAD+ via clinics, not FDA-approved for longevity.",
+   safety:"Good short-term tolerability (NMN to ~900–1250 mg/day). Theoretical oncology concern from mouse data; no multi-year safety data.",
+   dose:"NMN ~250–900 mg/day; NR ~250–1000 mg/day oral."},
+  {name:"Epitalon (Epithalon)",cat:"Longevity / Immune",grade:G.L,rx:"Research-only",wada:"Not listed",
+   what:"Synthetic pineal tetrapeptide (AEDG) proposed to activate telomerase and restore circadian regulation.",
+   evidence:"<span class='flag'>Anecdotal-only / very low quality — human data almost entirely from a single Russian group, no independent RCT replication.</span> Telomere/lifespan claims are cell/animal-level.",
+   status:"No FDA approval anywhere; research-chemical/grey-market. Not WADA-named.",
+   safety:"<span class='flag'>No long-term human safety data. Theoretical telomerase/oncogenesis concern. Injectable grey-market contamination risk.</span>",
+   dose:"~5–10 mg/day SC for 10–20 days, 1–2×/year (no validated regimen)."},
+
+  // Recovery / healing
+  {name:"BPC-157",cat:"Recovery / Healing",grade:G.L,rx:"Research-only",wada:"Banned (all)",
+   what:"Synthetic gastric pentadecapeptide claimed to promote angiogenesis and tendon/ligament/gut healing.",
+   evidence:"<span class='flag'>Animal-only — NO completed, published human clinical trials.</span> A 2025 systematic review found essentially all data preclinical.",
+   status:"<span class='flag'>Not FDA-approved; placed in FDA Category 2 (significant safety risk) for 503A compounding — not permitted (2026 status reportedly in flux).</span> WADA: prohibited at all times (S0, since 2022, no TUE).",
+   safety:"<span class='flag'>No human safety data. Pro-angiogenic → theoretical tumor-promotion concern. Serious grey-market contamination/purity risk.</span>",
+   dose:"~200–500 mcg/day SC (often near injury) — unvalidated."},
+  {name:"TB-500 / Thymosin β4",cat:"Recovery / Healing",grade:G.L,rx:"Research-only",wada:"Banned (all)",
+   what:"Tβ4 is an actin-sequestering peptide (cell migration, angiogenesis); \"TB-500\" is a synthetic fragment sold for recovery.",
+   evidence:"Topical Tβ4 (RGN-259 eye drops) has mixed Phase 2/3 dry-eye data. The injectable \"TB-500\" sold to athletes has no completed human systemic trials.",
+   status:"Not FDA-approved; reported in the problematic Category 2 compounding bucket. WADA: prohibited under S2 (growth factors), in & out of competition.",
+   safety:"<span class='flag'>No long-term human safety data for injectable use. Pro-angiogenic → theoretical tumor concern. Grey-market contamination.</span>",
+   dose:"~2–2.5 mg SC twice weekly loading, then weekly (unvalidated)."},
+  {name:"GHK-Cu (Copper peptide)",cat:"Recovery / Healing",grade:G.P,rx:"Topical OK / Inject research",wada:"Not listed",
+   what:"Copper-binding tripeptide (Gly-His-Lys-Cu) signaling collagen/GAG synthesis and remodeling.",
+   evidence:"Reasonable TOPICAL cosmetic evidence (small human studies: reduced wrinkle depth, firmness, wound support). Injectable/systemic use essentially unstudied in humans.",
+   status:"Common cosmetic ingredient (topical, generally legal). Injectable GHK-Cu has no FDA clearance — grey-market. Not WADA-prohibited.",
+   safety:"Topical well tolerated (mild irritation). Injectable unstudied — copper dosing/toxicity, contamination, no systemic safety data.",
+   dose:"Topical serums ~1–4%; no validated injectable dose."},
+
+  // Metabolic / Incretin
+  {name:"Retatrutide",cat:"Metabolic / Incretin",grade:G.S,rx:"Investigational (Phase 3)",wada:"Not listed",
+   what:"Eli Lilly's once-weekly triple agonist (GLP-1 + GIP + glucagon) — the first triple incretin agonist in Phase 3. Metabolic/weight lane with longevity-adjacent interest (visceral fat, cardiometabolic risk, MASLD).",
+   evidence:"Strong, fast-maturing efficacy. Phase 3 TRIUMPH-1 (n=2,339) ~28.3% weight loss at 80 wks (30.3% at 104 wks in BMI≥35); TRIUMPH-4 ~28.7% at 12 mg — beating tirzepatide (~22.5%) and semaglutide (~14.9%). TRANSCEND-T2D-1: ~-2.0% HbA1c. No long-term/longevity-endpoint data yet.",
+   status:"<span class='flag'>NOT FDA-approved — investigational only. Lilly NDA filing ~Q4 2026; possible approval ~late 2027, launch ~2028. Legitimate access is via clinical trial until then; grey-market \"retatrutide\" is unapproved and frequently mislabeled.</span> GLP-1 class not currently on WADA list (verify).",
+   safety:"Class GI effects (nausea, vomiting, diarrhea); glucagon arm can raise heart rate/affect glucose — titrate slowly. <span class='flag'>Lean-mass loss with rapid weight loss (pair with protein + resistance training); long-term safety not yet established.</span>",
+   dose:"Trial doses up to 12 mg SC weekly via slow titration. No approved label dosing yet."}
+];
+
+const VENDORS = ["bulksupplements.com","iherb.com","jarrow.com","shop.drbronner.com","thorne.com",
+  "richters.com","starwest-botanicals.com","omfoods.com","realrawfood.com","harmonicarts.ca","seventhdimensionaldreamer.net"];
+
+const STACK_ORDER = ["Daily Core","T / Energy","Sleep / Night","Racetams","Suggested"];
+const PCAT_ORDER = ["T / HPG-Axis","GH Secretagogue","Metabolic / Incretin","Longevity / Immune","Recovery / Healing"];
+const GRADE_RANK = {Strong:0,Moderate:1,Preliminary:2,Weak:3,Minimal:4};
+let activeStack="all", activeGrade="all", q="", sortMode="default";
+let pActiveCat="all", pq="";
+
+// ---- stats ----
+document.getElementById("stats").innerHTML = `
+  <div class="stat"><b>${DATA.filter(d=>!d.suggested).length}</b><span>On your sheet</span></div>
+  <div class="stat"><b>${DATA.filter(d=>d.suggested).length}</b><span>Suggested adds</span></div>
+  <div class="stat"><b>${DATA.filter(d=>d.grade===G.S).length}</b><span>Strong evidence</span></div>
+  <div class="stat"><b>${PEPTIDES.length}</b><span>Peptides</span></div>
+  <div class="stat"><b>${PEPTIDES.filter(p=>p.rx==='FDA-approved').length}</b><span>FDA-approved peptides</span></div>`;
+document.getElementById("count2").textContent = DATA.length;
+document.getElementById("pcount2").textContent = PEPTIDES.length;
+document.getElementById("vendors").innerHTML = VENDORS.map(v=>{
+  const url=v.startsWith("http")?v:"https://"+v;
+  return `<a class="vendor" href="${url}" target="_blank" rel="noopener">${v}</a>`;}).join("");
+
+// ---- tabs ----
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{
+  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+  t.classList.add("active");
+  const v=t.dataset.view;
+  document.getElementById("view-supps").classList.toggle("hidden",v!=="supps");
+  document.getElementById("view-peptides").classList.toggle("hidden",v!=="peptides");
+  document.getElementById("view-lifestyle").classList.toggle("hidden",v!=="lifestyle");
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+// ---- supplement chips ----
+document.getElementById("stackChips").innerHTML =
+  `<span class="chip active" data-stack="all">All stacks</span>` +
+  STACK_ORDER.map(s=>`<span class="chip" data-stack="${s}">${s==="Suggested"?"✨ Suggested":s}</span>`).join("");
+const grades=["all","Strong","Moderate","Preliminary","Weak","Minimal"];
+document.getElementById("gradeChips").innerHTML = grades.map(g=>
+  `<span class="chip" data-grade="${g}">${g==="all"?"Any evidence":g}</span>`).join("");
+
+document.querySelectorAll("#stackChips .chip").forEach(c=>c.onclick=()=>{
+  document.querySelectorAll("#stackChips .chip").forEach(x=>x.classList.remove("active"));
+  c.classList.add("active");activeStack=c.dataset.stack;render();});
+document.querySelectorAll("#gradeChips .chip").forEach(c=>c.onclick=()=>{
+  document.querySelectorAll("#gradeChips .chip").forEach(x=>x.classList.remove("active"));
+  c.classList.add("active");activeGrade=c.dataset.grade;render();});
+document.getElementById("search").oninput=e=>{q=e.target.value.toLowerCase();render();};
+document.getElementById("sort").onchange=e=>{sortMode=e.target.value;render();};
+
+function tierClass(d){if(d.suggested)return"suggested";return d.tier==="1"?"t1":d.tier==="3"?"t3":d.tier==="4"?"t4":d.tier?"":"research";}
+function tierBadge(d){
+  if(d.suggested)return`<span class="badge b-sugg">SUGGESTED</span>`;
+  if(!d.tier)return`<span class="badge b-research">NOOTROPIC</span>`;
+  const m={"1":"b-t1","3":"b-t3","4":"b-t4"};
+  return`<span class="badge ${m[d.tier]||'b-research'}">TIER ${d.tier}</span>`;}
+function gradeBadge(g){return`<span class="grade gr-${g}">${g} evidence</span>`;}
+
+function render(){
+  let rows=DATA.filter(d=>{
+    if(activeStack!=="all"&&d.stack!==activeStack)return false;
+    if(activeGrade!=="all"&&d.grade!==activeGrade)return false;
+    if(q){const h=(d.name+d.note+(d.evidence||"")+(d.safety||"")+d.stack).toLowerCase();if(!h.includes(q))return false;}
+    return true;});
+  if(sortMode==="name")rows.sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sortMode==="grade")rows.sort((a,b)=>GRADE_RANK[a.grade]-GRADE_RANK[b.grade]);
+  else if(sortMode==="tier")rows.sort((a,b)=>(a.tier||"9").localeCompare(b.tier||"9"));
+
+  document.getElementById("suggBanner").style.display=(activeStack==="Suggested"||activeStack==="all")?"block":"none";
+  document.getElementById("grid").innerHTML=rows.map(d=>`
+    <div class="card ${tierClass(d)}">
+      <h3>${d.name} ${tierBadge(d)}</h3>
+      <div class="pbadges">${gradeBadge(d.grade)} <span class="stack-tag">${d.stack==="Suggested"?"Complementary":d.stack}</span></div>
+      <div class="specs">
+        ${d.dose?`<span class="spec"><i>Dose</i> ${d.dose}</span>`:``}
+        ${d.freq?`<span class="spec"><i>When</i> ${d.freq}</span>`:``}
+        ${d.sol?`<span class="spec"><i>Soluble</i> ${d.sol}</span>`:``}
+      </div>
+      ${d.note?`<p class="note">${d.note}</p>`:``}
+      ${d.src?`<div class="src"><b>Dietary source:</b> ${d.src}</div>`:``}
+      <details class="ev"><summary>Evidence &amp; safety</summary>
+        <div class="ev-body">
+          ${d.evidence?`<p><span class="k">What the research supports</span>${d.evidence}</p>`:``}
+          ${d.evDose?`<p><span class="k">Evidence-based dose</span>${d.evDose}</p>`:``}
+          ${d.safety?`<p><span class="k">Safety / interactions</span>${d.safety}</p>`:``}
+          ${d.evSrc?`<p class="src"><b>Source:</b> ${d.evSrc}</p>`:``}
+        </div>
+      </details>
+      ${d.link?`<a class="link" href="${d.link}" target="_blank" rel="noopener">↗ Reference / buy</a>`:``}
+    </div>`).join("");
+  document.getElementById("empty").style.display=rows.length?"none":"block";
+}
+render();
+
+// ---- peptides ----
+document.getElementById("pcatChips").innerHTML=
+  `<span class="chip active" data-pcat="all">All categories</span>`+
+  PCAT_ORDER.map(c=>`<span class="chip" data-pcat="${c}">${c}</span>`).join("");
+document.querySelectorAll("#pcatChips .chip").forEach(c=>c.onclick=()=>{
+  document.querySelectorAll("#pcatChips .chip").forEach(x=>x.classList.remove("active"));
+  c.classList.add("active");pActiveCat=c.dataset.pcat;renderP();});
+document.getElementById("psearch").oninput=e=>{pq=e.target.value.toLowerCase();renderP();};
+
+function rxBadge(rx){
+  if(rx==="FDA-approved")return`<span class="pb pb-rx">✓ FDA-approved</span>`;
+  return`<span class="pb pb-grey">${rx}</span>`;}
+function wadaBadge(w){if(w==="Not listed")return`<span class="pb pb-cat">WADA: not listed</span>`;
+  return`<span class="pb pb-wada">WADA: ${w}</span>`;}
+
+function renderP(){
+  let rows=PEPTIDES.filter(p=>{
+    if(pActiveCat!=="all"&&p.cat!==pActiveCat)return false;
+    if(pq){const h=(p.name+p.what+p.evidence+p.status+p.cat).toLowerCase();if(!h.includes(pq))return false;}
+    return true;});
+  rows.sort((a,b)=>{const c=PCAT_ORDER.indexOf(a.cat)-PCAT_ORDER.indexOf(b.cat);return c!==0?c:GRADE_RANK[a.grade]-GRADE_RANK[b.grade];});
+  document.getElementById("pgrid").innerHTML=rows.map(p=>`
+    <div class="card ${p.rx==='FDA-approved'?'t1':'research'}">
+      <h3>${p.name}</h3>
+      <div class="pbadges">${gradeBadge(p.grade)} ${rxBadge(p.rx)} ${wadaBadge(p.wada)}</div>
+      <span class="stack-tag">${p.cat}</span>
+      <p class="note" style="margin-top:9px">${p.what}</p>
+      <details class="ev"><summary>Evidence, status &amp; safety</summary>
+        <div class="ev-body">
+          <p><span class="k">Evidence (humans)</span>${p.evidence}</p>
+          <p><span class="k">Regulatory / WADA status</span>${p.status}</p>
+          <p><span class="k">Safety</span>${p.safety}</p>
+          <p><span class="k">Cited reference dose</span>${p.dose}</p>
+        </div>
+      </details>
+    </div>`).join("");
+}
+renderP();
+</script>
+</body>
+</html>
